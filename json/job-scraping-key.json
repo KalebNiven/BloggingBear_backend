@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "job-scraping-398114",
+  "private_key_id": "55cc1333cf0986a36b214107a407d0310168b03f",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDASeejw/Fs0C0Y\nUnn2kqYlK/0uo4++CgHB745ieIvUHjrD8/GVQ1zOJG44hVvoq2+pM2hr1PSEIOtP\nwR8cwz/DcC8YFaD03ryqWqmNAyxt/F7aM3/wNMKVpUneuMcOGYWi/Al7/TMqpuuH\nfRSMxdijPyRXZx6Yk23l2Sp1zdlgBEBUuzPuLmULRtPiWH9zQZ+34Yi3coopUsGs\nbF+nx5+QXUk/vuzgHcWDORDx8XLtHf/5WLmLNFLkATTXbIRmvBRfSeHfd7x5UOJP\nJcrlm0JvGpPkHgZ9TafFcdBaHyf5U3h2pG8ZAtYw9W/G8y/YHfzDjsnW8iW3CNJk\nbWT/+R0NAgMBAAECggEAUdqkCqiMix+LMsFZPcdrhoNVQZdKx0EHQoExgWWDUIaV\nyXh8rGeCiBYl/VV3rHHeFI7Xsp9yfxRsVwUEs3/CEvYcdgou/E4czf/OEUL6lM9L\nqWMm4R/0fTNhYLgTtELVCm5zsx4zu8JWnNR3/PzznXpxg+tXsOeBbsilNISuNhqa\npAo+L2nMSg4B5q8gEYTY3rPAz+9Ddynve7DNbIkUMW5au5iQmK+l4mNsMC1Bqs+L\n5gvXvTLnzTYbFUBYcH1U2AVg5EpI3FV4qpSze54qxouAuEET9SQ8pzU3PMS5p4Qy\nOKU+jNs3AQau5EAAEYrk0zC9NSmNP4468q4vhkfvWQKBgQD9NvBOmLTVqmuMI66P\nbShWdQaY+D/kmGEZ/z3WXgaab5ADi38Ql9G7MIWzmz+Fcw8+ZU4oKxhsDMOmiubW\nshDCmGW+kMRq9dwbqB7+nakQu1iAWayq0LeBBP3tXAe7aZ6+FdG7BYfqpG2xulw2\nAUq2ulwuNW9LmzSb1bWKWDSe8wKBgQDCZ2WIU4LiysjtlzJFnUKvnhk2E6faDPUw\n66IJgVbcsVd3M5FTZcArjykN6ZNj8SeZWmqlQpLj/rxsqiAi+JNpg0KJAIaspY1b\n9+40dzUH1Vvuw7Rl6bLktLoB/Xx4LSK8WkH7gN0W29pZGfqb7unTVOM/bbHix4Dx\nYNg+mWJT/wKBgG63xvuW6ftDOSNdtsYgBLNJGElqwwVBW7PyVyeUlW6RuXbTWAv5\nVktzPAL8rxm65b9yrGoD7fnQ2vvHYIgf9BQibtqUkk3ykvvE10idx375bAkzLLzD\n5nkTpbRTuU3JMRAMmlgcYwHGQ/CifA9hITok4omR88grZSV+nJKRXvDhAoGBAJvT\nrXsdFakcyvpHW7CZYb7Lh4HlN4J9KHzSI8xitHGqZWXTHAYxZVyFIG9abx6JSyiN\nZTaaqou+wOKJa8EcZ20IHekbVthEy46QqYu8kfF5gHteu9eFADR6+S5nNcJOy60W\n3BTxMkcEa31Iaa1cUGlpfc5160TQjfbtnehvonWZAoGAJdEk4083Obdg9pqKP/9z\nbf+9q/AJ9oSOUkSDUrit0doO9Nh+hi3DCDt5BcnKYwgrlT2qgnFNx+BIXuJPJuU+\nZrgfE/oEJqrBb0uIDTDT0RJghjZQ/MbLxRYROuc5g2RE9N/Mjz7KOBjSogJ8DRYv\nBYuyf1p6+KC3qUqQ5dpOLtQ=\n-----END PRIVATE KEY-----\n",
+  "client_email": "job-scraping-service-account@job-scraping-398114.iam.gserviceaccount.com",
+  "client_id": "101800416039989250534",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/job-scraping-service-account%40job-scraping-398114.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
