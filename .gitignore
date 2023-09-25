@@ -95,3 +95,6 @@ uploads/
 
 #environment
 .env
+
+#secret keys I should not upload
+json/
