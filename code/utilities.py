@@ -1,48 +1,80 @@
 import openai
 import os
 
+from flask import jsonify
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
+
+
+# Authenticate using the credentials file
+credentials_file = "json/job-scraping-key.json"
+credentials = service_account.Credentials.from_service_account_file(credentials_file,
+                                                                    scopes=['https://www.googleapis.com/auth/drive',
+                                                                            'https://www.googleapis.com/auth/documents'])
+# Create a Google Drive API service
+global drive_service
+drive_service = build('drive', 'v3', credentials=credentials)
+global docs_service
+docs_service = build('docs', 'v1', credentials=credentials)
+
+
+
+def generate_instruction(row_data, headline, keyword, first_run):
+
+    # Use the data from 'row_data' to construct your instruction template
+    style = row_data['Instructions']  # Column 'C'
+    title = row_data['Blog Title']  # Column 'A'
+    additional_data = ""
+    if row_data['Facts'] is not None:
+        additional_data = row_data['Facts']  # Column 'N'
+
+    # Constructing the core instruction
+    instruction = (
+        f"You are an amazing writer, probably one of the best in the US."
+        f"You are super versatile and can write basically on any subject and pick up any style.\n\n"
+        f"Today, you are writing in the following style: '{style}'\n\n"
+        f"So, keeping in mind this style, I want you to write a few sections for a blog titled: '{title}'\n\n"
+        f"You’ll have to write a few sections for that post now.  Keep titles the same even though they are boring, "
+        f"make them title case, and also format them for publishing (if it’s marked as H2, it has to be formatted as "
+        f"H2, etc. but you have to remove H2&H3 mark and transform it into an subheading of the right formatting but "
+        f"don’t make it bold)"
+        f" Please also ensure there’s no mumbling - go straight to the point. For instance, if H2/H3 is a question, "
+        f"the writing should clearly respond to this question (sort of like a perfect SEO snippet will do).  Also, "
+        f"please don’t write any intros and outros unless it is specifically asked in the headlines. I am willing to "
+        f"copy and paste the output so I’d appreciate if you want any other additional comments, etc. Just stick to "
+        f"the guidelines."
+        f" Here are the headlines to write about: '{headline}'\n\n"
+        f"Please use the following keywords (no need to make it bold): '{keyword}'"
+    )
+
+    # Adding the additional data instruction for the first run
+    if first_run and additional_data:
+        instruction += (
+            f"Please ensure to integrate the facts and figures I've provided as hyperlinks directly in the text. The "
+            f"anchor text should always be a number (priority)  or a fact (choose 1-3 words maximum), leading the "
+            f"readers to the source without breaking the flow of the narrative. No footnotes, please. Use the "
+            f"following facts/links: “{additional_data}'"
+        )
+
+    return instruction
+
+
 def formulate_instructions(row_data, run_number):
     """
     Formulates the instructions for content generation based on the data from a specific row in the Google Sheet.
     """
-
-    # Mapping of run numbers to the corresponding column names for headlines and keywords
-    column_map = {
-        1: ('Headlines_1', 'Keywords_1'),  # Columns 'D' and 'E'
-        2: ('Headlines_2', 'Keywords_2'),  # Columns 'F' and 'G'
-        3: ('Headlines_3', 'Keywords_3'),  # Columns 'H' and 'I'
-        # Add more mappings for further runs if needed
-    }
-
-    # Fetching the correct column names based on the run number
-    headlines_col, keywords_col = column_map.get(run_number, ('Headlines_1', 'Keywords_1'))
-
-    # Use the data from 'row_data' to construct your instruction template
-    style = row_data['Instructions']  # Column 'C' 
-    title = row_data['Blog Title']  # Column 'A' 
-    headlines = row_data[headlines_col]
-    keywords = row_data[keywords_col]
-    additional_data = ""
-    if row_data['Facts'] is not None:
-        additional_data = row_data['Facts']  # Column 'N' 
-    
-
-
-    # Constructing the core instruction
-    instruction = (
-        f"Today, you are writing in the following style: '{style}'\n\n"
-        f"So, keeping in mind this style, I want you to write a few sections for a blog titled: '{title}'\n\n"
-        f"Please write about the following (keep titles the same even though they are boring). Please write concise, straight-to-the-point content for the topics in the subheadlines, directly answering any questions they pose. No intros or outros unless directed. Maintain the headline formats (H2, H3, etc.) and continuously relate the content back to the main blog title. Ensure the content is the user needs focused and avoids any 'mumbling.' Here are the headlines to write about: '{headlines}'\n\n"
-        f"Please use the following keywords (no need to make it bold): '{keywords}'"
-    )
-
-    # Adding the additional data instruction for the first run
-    if run_number == 1 and additional_data:
-        instruction += (
-            f"\n\nPlease also integrate additional data into to the post to show your authority and understanding of the subject. Please ensure that hyperlinks are tucked right into the text so your readers can click away to learn more without stumbling upon footnotes. The anchor texts have to be facts and figures. The data with sources are the following: “{additional_data}'"
-        )
-    
+    instruction = []
+    for key, value in row_data.items():
+        first_run = False
+        if key.startswith("Headlines_"):
+            headline = row_data.get(key)
+            if key == "Headlines_1":
+                first_run = True
+            if len(headline) > 2:
+                keyword = row_data.get("Keywords_" + key.split('_')[1])
+                instruction.append(generate_instruction(row_data, headline, keyword, first_run))
     return instruction
+
 
 def generate_content(openai_api_key, instructions, max_tokens=550):
     """
@@ -51,43 +83,32 @@ def generate_content(openai_api_key, instructions, max_tokens=550):
     openai.api_key = openai_api_key
     try:
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo-0301", 
+            model="gpt-3.5-turbo-0301",
             messages=[
-                {"role": "system", "content": 'You are a kick-ass writer who can write in absolutely any style and about any subject. And you are about to write a blog post.'},
+                {"role": "system",
+                 "content": 'You are a kick-ass writer who can write in absolutely any style and about any subject. And you are about to write a blog post.'},
                 {"role": "user", "content": instructions}
-            ], 
+            ],
             max_tokens=max_tokens
         )
         return response
     except Exception as e:
-        print(f"Error in content generation: {e}")
-        import traceback
-        traceback.print_exc()  # This will print the full exception trace
-        return None
+        return e
 
-def create_google_doc(doc_title, user_email):
-    global docs_service
-    doc = docs_service.documents().create(body={'title': doc_title}).execute()
-    doc_id = doc['documentId']
-    doc_url = f"https://docs.google.com/document/d/{doc_id}/edit"
 
-    # Share the document with the signed-in user
-    permissions = {
-        'role': 'writer',
-        'type': 'user',
-        'emailAddress': user_email,
+
+def create_google_doc(document_title,folder_id):
+    file_metadata = {
+        'name': document_title,
+        'parents': [folder_id],
+        'mimeType': 'application/vnd.google-apps.document'
     }
-    docs_service.permissions().create(
-        fileId=doc_id,
-        body=permissions,
-        fields='id',
-    ).execute()
+    new_document = drive_service.files().create(body=file_metadata).execute()
+    return new_document["id"]
 
-    return doc_id, doc_url
 
 
 def update_google_doc(doc_id, content):
-    global docs_service
     requests = [
         {
             'insertText': {
@@ -99,5 +120,3 @@ def update_google_doc(doc_id, content):
         }
     ]
     docs_service.documents().batchUpdate(documentId=doc_id, body={'requests': requests}).execute()
-
-
