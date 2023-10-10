@@ -1,4 +1,3 @@
-
 from utilities import formulate_instructions, generate_content, create_google_doc, update_google_doc
 from google_api import client, setup_google_docs_api
 import logging
@@ -8,6 +7,7 @@ import os
 import pandas as pd
 from config import cipher_suite, OPENAI_API_KEY
 from cryptography.fernet import Fernet
+
 logging.basicConfig(level=logging.DEBUG)
 
 app = Flask(__name__)
@@ -151,9 +151,6 @@ def generate_content_endpoint():
     if not folder_id:
         return jsonify({'error': "Folder Path not provided"}), 500
 
-
-
-
     logging.debug("Received data: %s", data)
 
     # The following is a loop that goes through each selected row,
@@ -164,17 +161,17 @@ def generate_content_endpoint():
     for index, row in enumerate(selected_rows):
         row_data = []
         if 'Instructions' not in row:
-            return jsonify({'error': "Instructions not provided of row "+str(index+1)}), 500
+            return jsonify({'error': "Instructions not provided of row " + str(row.get('row_no'))}), 500
         if 'Blog Title' not in row:
-            return jsonify({'error': "Blog Title not provided of row "+str(index+1)}), 500
+            return jsonify({'error': "Blog Title not provided of row " + str(row.get('row_no'))}), 500
         instructions = formulate_instructions(row, run_number=1)
         for instruction in instructions:
             content = generate_content(OPENAI_API_KEY, instruction, max_tokens)
-            if hasattr(content,'json_body'):
-                return jsonify({'error': str(content.json_body.get('error').get('message'))}), 500
+            if hasattr(content, 'json_body'):
+                return jsonify({'error': str(content.json_body.get('error').get('message')) + " on row " + str(
+                    row.get('row_no'))}), 500
             else:
                 row_data.append(content.get('choices')[0].get('message').get('content'))
-
         rows = {
             "title": row['Blog Title'],
             "content": ''.join(row_data),
@@ -186,6 +183,7 @@ def generate_content_endpoint():
     return create_doc(response_data)
     # return jsonify({'data': response_data}), 200
 
+
 # except Exception as e:
 #     # Handle any errors that occur
 #     logging.error("An error occurred: %s", str(e))
@@ -194,12 +192,14 @@ def generate_content_endpoint():
 
 def create_doc(data):
     try:
+        doc_name = []
         for row in data:
             title = row.get('title')
             folder_id = row.get('folder_id')
             content = row.get('content')
             # Create a new Google Doc using the function you defined earlier
-            doc_id = create_google_doc(title, folder_id)
+            doc_id, name = create_google_doc(title, folder_id)
+            doc_name.append("," + name)
             # Log the successful creation
             logging.info("Document created successfully")
 
@@ -214,7 +214,7 @@ def create_doc(data):
         return jsonify(error=str(e), message="An error occurred"), 500
 
     # Return the doc ID and URL
-    return jsonify({'docId': doc_id})
+    return jsonify({'docId': "Document created successfully " + ''.join(doc_name)})
 
 
 # def main(api_key, sheet_url, sheet_name):

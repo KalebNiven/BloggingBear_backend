@@ -7,7 +7,7 @@ from googleapiclient.discovery import build
 
 
 # Authenticate using the credentials file
-credentials_file = "json/job-scraping-key.json"
+credentials_file = "D:\old\BloggingBear_backend\json\job-scraping-key.json"
 credentials = service_account.Credentials.from_service_account_file(credentials_file,
                                                                     scopes=['https://www.googleapis.com/auth/drive',
                                                                             'https://www.googleapis.com/auth/documents'])
@@ -19,7 +19,7 @@ docs_service = build('docs', 'v1', credentials=credentials)
 
 
 
-def generate_instruction(row_data, headline, keyword, first_run):
+def generate_instruction(row_data, headline, keyword, first_run,gpt_version):
 
     # Use the data from 'row_data' to construct your instruction template
     style = row_data['Instructions']  # Column 'C'
@@ -55,8 +55,11 @@ def generate_instruction(row_data, headline, keyword, first_run):
             f"readers to the source without breaking the flow of the narrative. No footnotes, please. Use the "
             f"following facts/links: “{additional_data}'"
         )
-
-    return instruction
+    instruction_data = {
+        'instruction': instruction,
+        'GPT_Version': gpt_version,
+    }
+    return instruction_data
 
 
 def formulate_instructions(row_data, run_number):
@@ -72,7 +75,8 @@ def formulate_instructions(row_data, run_number):
                 first_run = True
             if len(headline) > 2:
                 keyword = row_data.get("Keywords_" + key.split('_')[1])
-                instruction.append(generate_instruction(row_data, headline, keyword, first_run))
+                gpt_version = row_data.get("GPT_v_" + key.split('_')[1])
+                instruction.append(generate_instruction(row_data, headline, keyword,first_run ,gpt_version ))
     return instruction
 
 
@@ -82,18 +86,24 @@ def generate_content(openai_api_key, instructions, max_tokens=550):
     """
     openai.api_key = openai_api_key
     try:
+        if instructions.get('GPT_Version'):
+            gpt_model = instructions.get('GPT_Version')
+        else:
+            gpt_model = "gpt-3.5-turbo"
+
         response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo-0301",
+            model=gpt_model,
             messages=[
                 {"role": "system",
                  "content": 'You are a kick-ass writer who can write in absolutely any style and about any subject. And you are about to write a blog post.'},
-                {"role": "user", "content": instructions}
-            ],
-            max_tokens=max_tokens
+                {"role": "user", "content": instructions.get('instruction')}
+            ]
         )
+        # max_tokens = max_tokens
         return response
     except Exception as e:
         return e
+
 
 
 
@@ -104,7 +114,7 @@ def create_google_doc(document_title,folder_id):
         'mimeType': 'application/vnd.google-apps.document'
     }
     new_document = drive_service.files().create(body=file_metadata).execute()
-    return new_document["id"]
+    return new_document["id"],new_document["name"]
 
 
 
