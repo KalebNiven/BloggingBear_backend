@@ -5,13 +5,14 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
 import pandas as pd
-from config import cipher_suite, OPENAI_API_KEY
+from config import cipher_suite, OPENAI_API_KEY, CORS_ORGINS
 from cryptography.fernet import Fernet
+
 
 logging.basicConfig(level=logging.DEBUG)
 
 app = Flask(__name__)
-CORS(app, origins=["http://localhost:3000"])
+CORS(app, origins=CORS_ORGINS)
 
 # Attempt to load the secret key from an environment variable
 # If it doesn't exist, create a new one and save it in the environment variable
