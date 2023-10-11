@@ -7,16 +7,18 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.oauth2 import service_account
 import gspread
 
+# from code.App import cipher_suite
+
 # Define paths and scopes
-SHEETS_CREDENTIALS_PATH = '../json/job-scraping-key.json'
-DOCS_CREDENTIALS_PATH = '../json/web_client1.json'
+SHEETS_CREDENTIALS_PATH = "../json/job-scraping-key.json"
+DOCS_CREDENTIALS_PATH = "../json/web_client1.json"
 
 SCOPES = [
-    'https://www.googleapis.com/auth/documents', 
-    'https://www.googleapis.com/auth/drive', 
+    'https://www.googleapis.com/auth/documents',
+    'https://www.googleapis.com/auth/drive',
     'https://www.googleapis.com/auth/spreadsheets',
     'https://www.googleapis.com/auth/drive.file'
-    
+
 ]
 
 # Authenticate and build services
@@ -35,20 +37,27 @@ def setup_google_docs_api():
     After obtaining the credentials, it saves them to the `token.pickle` file for future use.
 
     """
+    # Authenticate using the credentials file
+    credentials_file = "json/job-scraping-key.json"
+    credentials = service_account.Credentials.from_service_account_file(credentials_file, scopes=[
+        'https://www.googleapis.com/auth/drive'])
+    # Create a Google Drive API service
+    global drive_service
+    drive_service = build('drive', 'v3', credentials=credentials)
     global docs_service
     creds = None
 
     if os.path.exists('token.pickle'):
         with open('token.pickle', 'rb') as token:
             creds = pickle.load(token)
-    
+
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(DOCS_CREDENTIALS_PATH, SCOPES)
             creds = service_account.Credentials.from_service_account_file(SHEETS_CREDENTIALS_PATH, scopes=SCOPES)
-        
+
         with open('token.pickle', 'wb') as token:
             pickle.dump(creds, token)
 
