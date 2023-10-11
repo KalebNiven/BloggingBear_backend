@@ -10,8 +10,8 @@ import gspread
 # from code.App import cipher_suite
 
 # Define paths and scopes
-SHEETS_CREDENTIALS_PATH = 'D:\old\BloggingBear_backend\json\job-scraping-key.json'
-DOCS_CREDENTIALS_PATH = 'D:\old\BloggingBear_backend\json\sheet.json'
+SHEETS_CREDENTIALS_PATH = "../json/job-scraping-key.json"
+DOCS_CREDENTIALS_PATH = "../json/web_client1.json"
 
 SCOPES = [
     'https://www.googleapis.com/auth/documents',
