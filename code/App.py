@@ -31,44 +31,6 @@ cipher_suite = Fernet(secret_key.encode())
 doc_urls = []
 
 
-# @app.route('/google-auth', methods=['POST'])
-# def google_auth():
-#
-#     try:
-#         # Get the token sent by the frontend
-#         token = request.json['token']
-#         client_id = request.json['client_id']
-#
-#         # Verify the token
-#         idinfo = id_token.verify_oauth2_token(token, requests.Request(), client_id)
-#
-#         # ID token is valid, get the user's info
-#         userid = idinfo['sub']
-#         email = idinfo['email']
-#
-#         # Creating a session
-#         session['user_id'] = userid
-#         session['email'] = email
-#
-#         # Encrypt the token and save it to your .env file
-#         encrypted_token = cipher_suite.encrypt(token.encode())
-#         with open(".env", "a") as env_file:
-#             env_file.write(f"\nUSER_TOKEN={encrypted_token.decode()}")
-#
-#
-#     except ValueError:
-#         print("Invalid token")
-#         # Invalid token
-#         return jsonify(message="Invalid token"), 401
-#     except Exception as e:
-#         # Catch any other exceptions
-#         return jsonify(message=str(e)), 500
-#
-#
-#
-#     # ... (further processing: create session, etc.)
-#     return jsonify(message="Successfully authenticated", email=email)
-
 
 # Create another route to get the decrypted token
 @app.route('/get_token', methods=['GET'])
@@ -217,62 +179,6 @@ def create_doc(data):
     # Return the doc ID and URL
     return jsonify({'docId': "Document created successfully " + ''.join(doc_name)})
 
-
-# def main(api_key, sheet_url, sheet_name):
-#     logging.info("Starting the main function")
-#     doc_urls = []
-#
-#
-#     try:
-#         logging.info("Setting up Google Sheets API")
-#         # Ensure credentials are defined before this line
-#         # client = gspread.authorize(credentials)
-#         logging.info("Fetching sheet data")
-#         spreadsheet = client.open_by_url(sheet_url)
-#         worksheet = spreadsheet.worksheet(sheet_name)
-#         sheet_data = worksheet.get_all_records()
-#
-#          # Define column pairs for each run
-#         column_pairs = [
-#             ('Headline_1', 'Keywords_1'),
-#             ('Headline_2', 'Keywords_2'),
-#             ('Headline_3', 'Keywords_3'),
-#             ('Headline_4', 'Keywords_4'),
-#             ('Headline_5', 'Keywords_5'),
-#         ]
-#
-#         for row in sheet_data:
-#             blog_title = row.get('Blog Title')
-#
-#             doc_id, doc_url = create_google_doc(blog_title)
-#
-#             # Ensure that the first three runs have data
-#             for i in range(3):
-#                 if not row.get(column_pairs[i][0]) or not row.get(column_pairs[i][1]):
-#                     raise ValueError(f"Data missing for mandatory run number {i+1}")
-#
-#             for run_number, (headline_col, keywords_col) in enumerate(column_pairs, start=1):
-#                 headline = row.get(headline_col)
-#                 keywords = row.get(keywords_col)
-#
-#                 # Check if data is present in both cells
-#                 if headline and keywords:
-#                     # Formulate instructions and generate content
-#                     instructions = formulate_instructions(row, run_number)
-#                     content = generate_content(api_key, instructions, max_tokens=550)
-#
-#                     # Update the Google Doc with the generated content
-#                     update_google_doc(doc_id, content.choices[0].message['content'])
-#                 else:
-#                     # Break if any cell is empty
-#                     break
-#
-#             doc_urls.append(doc_url)
-#
-#         return 'Script executed successfully'
-#     except Exception as e:
-#             logging.exception("Error in main function")
-#             return f'Error: {str(e)}'
 
 
 if __name__ == '__main__':
