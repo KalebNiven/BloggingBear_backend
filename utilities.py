@@ -7,8 +7,7 @@ from googleapiclient.discovery import build
 
 
 # Authenticate using the credentials file
-credentials_file = False
-# ../json/job-scraping-key.json
+credentials_file = "../json/job-scraping-key.json"
 credentials = service_account.Credentials.from_service_account_file(credentials_file,
                                                                     scopes=['https://www.googleapis.com/auth/drive',
                                                                             'https://www.googleapis.com/auth/documents'])
