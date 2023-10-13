@@ -12,8 +12,8 @@ from cryptography.fernet import Fernet
 logging.basicConfig(level=logging.DEBUG)
 
 app = Flask(__name__)
-CORS(app)
-# CORS(app,resources={r"/*": {"origins": "https://bloggingbear-frontend-39f0be1ffd81.herokuapp.com/"}})
+# CORS(app)
+CORS(app,resources={r"/*": {"origins": "https://bloggingbear-frontend-39f0be1ffd81.herokuapp.com/"}})
 
 # Attempt to load the secret key from an environment variable
 # If it doesn't exist, create a new one and save it in the environment variable
@@ -105,6 +105,7 @@ def get_doc_urls():
 
 
 @app.route('/generate-content', methods=['POST'])
+@cross_origin()
 def generate_content_endpoint():
     logging.info("Received request at /generate-content endpoint")
     # try:
