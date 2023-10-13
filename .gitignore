@@ -6,7 +6,6 @@ __pycache__/
 
 # Virtual environment directory
 venv/
-.env
 
 # IDE and editor directories/files
 .idea/
@@ -93,8 +92,5 @@ $RECYCLE.BIN/
 # Files generated during development
 uploads/
 
-#environment
-.env
 
 #secret keys I should not upload
-json/
