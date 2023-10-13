@@ -15,4 +15,3 @@ def get_env_variable(var_name):
 
 # Loading environment variables
 OPENAI_API_KEY = get_env_variable("OPENAI_API_KEY")
-CORS_ORGINS = get_env_variable("CORS_ORGINS")
