@@ -12,7 +12,7 @@ from cryptography.fernet import Fernet
 logging.basicConfig(level=logging.DEBUG)
 
 app = Flask(__name__)
-CORS(app)
+CORS(app,resources={r"/*": {"origins": "https://bloggingbear-frontend-39f0be1ffd81.herokuapp.com/"}})
 
 # Attempt to load the secret key from an environment variable
 # If it doesn't exist, create a new one and save it in the environment variable
@@ -35,18 +35,19 @@ doc_urls = []
 # Create another route to get the decrypted token
 @app.route('/get_token', methods=['GET'])
 def get_token():
-    try:
-        # Get the encrypted token from your .env file
-        with open(".env", "r") as env_file:
-            for line in env_file:
-                if line.startswith('USER_TOKEN='):
-                    encrypted_token = line[len('USER_TOKEN='):-1]
-
-        # Decrypt the token
-        decrypted_token = cipher_suite.decrypt(encrypted_token.encode())
-        return jsonify({'token': decrypted_token.decode()}), 200
-    except Exception as e:
-        return jsonify({'error': str(e)}), 400
+    return "ug"
+    # try:
+    #     # Get the encrypted token from your .env file
+    #     with open(".env", "r") as env_file:
+    #         for line in env_file:
+    #             if line.startswith('USER_TOKEN='):
+    #                 encrypted_token = line[len('USER_TOKEN='):-1]
+    #
+    #     # Decrypt the token
+    #     decrypted_token = cipher_suite.decrypt(encrypted_token.encode())
+    #     return jsonify({'token': decrypted_token.decode()}), 200
+    # except Exception as e:
+    #     return jsonify({'error': str(e)}), 400
 
 
 @app.route('/upload-file', methods=['POST'])
