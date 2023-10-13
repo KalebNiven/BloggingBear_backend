@@ -5,7 +5,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import os
 import pandas as pd
-from config import cipher_suite, OPENAI_API_KEY, CORS_ORGINS
+from config import OPENAI_API_KEY
 from cryptography.fernet import Fernet
 
 logging.basicConfig(level=logging.DEBUG)
