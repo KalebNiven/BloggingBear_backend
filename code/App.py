@@ -8,13 +8,12 @@ import pandas as pd
 from config import cipher_suite, OPENAI_API_KEY, CORS_ORGINS
 from cryptography.fernet import Fernet
 
-
 logging.basicConfig(level=logging.DEBUG)
 
 app = Flask(__name__)
 # CORS(app)
-CORS(app,resources={r"/*": {"origins": "https://bloggingbear-frontend-39f0be1ffd81.herokuapp.com/"}})
-
+#CORS(app, resources={r"/*": {"origins": "https://bloggingbear-frontend-39f0be1ffd81.herokuapp.com/"}})
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
 # Attempt to load the secret key from an environment variable
 # If it doesn't exist, create a new one and save it in the environment variable
 secret_key = os.environ.get('SECRET_KEY')
@@ -30,7 +29,6 @@ cipher_suite = Fernet(secret_key.encode())
 
 # Initialize an empty list to store doc URLs
 doc_urls = []
-
 
 
 # Create another route to get the decrypted token
@@ -183,7 +181,6 @@ def create_doc(data):
 
     # Return the doc ID and URL
     return jsonify({'docId': "Document created successfully " + ''.join(doc_name)})
-
 
 
 if __name__ == '__main__':
