@@ -34,6 +34,7 @@ doc_urls = []
 
 # Create another route to get the decrypted token
 @app.route('/get_token', methods=['GET'])
+@cross_origin()
 def get_token():
     return "ug"
     # try:
@@ -72,6 +73,7 @@ def upload_file():
 
 #
 @app.route('/get-spreadsheet-data', methods=['POST'])
+@cross_origin()
 def get_spreadsheet_data():
     sheet_url = request.json['sheet_url']
     # sheet_url = "https://docs.google.com/spreadsheets/d/1rAvTLKjabmti9tNLF5uO9dF-jphi4D1v_pODV0h_g7E/htmlembed"
