@@ -185,4 +185,4 @@ def create_doc(data):
 
 if __name__ == '__main__':
     # setup_google_docs_api()
-    app.run(debug=False)
+    app.run(debug=False,host="0.0.0.0")
