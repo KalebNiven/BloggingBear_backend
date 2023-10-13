@@ -1,5 +1,5 @@
 from utilities import formulate_instructions, generate_content, create_google_doc, update_google_doc
-from google_api import client, setup_google_docs_api
+# from google_api import client, setup_google_docs_api
 import logging
 from flask import Flask, request, jsonify
 from flask_cors import CORS
