@@ -72,7 +72,8 @@ uritemplate
 urllib3
 wasabi
 weasel
-werkzeug
+Werkzeug==2.0.1
 wheel
 yarl
 gunicorn
+Flask-WTF==0.15.2
