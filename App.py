@@ -130,6 +130,7 @@ def generate_content_endpoint():
         instructions = formulate_instructions(row, run_number=1)
         for instruction in instructions:
             content = generate_content(OPENAI_API_KEY, instruction, max_tokens)
+            print('content genrated')
             if hasattr(content, 'json_body'):
                 return jsonify({'error': str(content.json_body.get('error').get('message')) + " on row " + str(
                     row.get('row_no'))}), 500
@@ -141,6 +142,8 @@ def generate_content_endpoint():
             "folder_id": folder_id,
         }
         response_data.append(rows)
+        print("response data")
+        print(response_data)
 
     # Return the generated content
     return create_doc(response_data)
@@ -155,6 +158,7 @@ def generate_content_endpoint():
 
 def create_doc(data):
     try:
+        print("in doc function")
         doc_name = []
         for row in data:
             title = row.get('title')
