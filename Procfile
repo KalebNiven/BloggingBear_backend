@@ -1,2 +1,1 @@
-web: gunicorn App:app
-worker: python App.py -t 1800
+web: gunicorn App:app --timeout 1800

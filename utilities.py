@@ -85,6 +85,7 @@ def generate_content(openai_api_key, instructions, max_tokens=550):
     Generates content using the OpenAI API.
     """
     openai.api_key = openai_api_key
+    print(instructions)
     try:
         if instructions.get('GPT_Version'):
             gpt_model = instructions.get('GPT_Version')
