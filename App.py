@@ -153,8 +153,10 @@ def generate_content_queue(data):
                     job.meta["percentage_done"] = percentage_done
                     job.save()
                 except Exception as e:
+                    # "Data provided by gpt is not correct please send this row " + str(
+                    #     row.get('row_no')) + " again"
                     return json.dumps(
-                        {'error': "Data provided by gpt is not correct please send this row again"}), 400
+                        {'error': str(e)}), 400
         rows = {
             "title": row['Blog Title'],
             "content": ''.join(row_data),
