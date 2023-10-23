@@ -147,7 +147,7 @@ def generate_content_queue(data):
                     row.get('row_no'))}), 400
             else:
                 try:
-                    row_data.append(content.get('choices')[0].get('message').get('content'))
+                    row_data.append(content["choices"][0]["message"]["content"])
                     percentage_done = calculate_percentage(no + 1, len(instructions))
                     job.meta['status'] = 'in_progress'
                     job.meta["percentage_done"] = percentage_done
