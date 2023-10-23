@@ -19,7 +19,9 @@ app = Flask(__name__)
 # CORS(app)
 # CORS(app, resources={r"/*": {"origins": "https://bloggingbear-frontend-39f0be1ffd81.herokuapp.com/"}})
 CORS(app)
-redis_conn = Redis()
+# Access the Redis URL provided by Heroku's environment variable
+redis_url = os.environ.get("REDISCLOUD_URL")
+redis_conn = Redis.from_url(redis_url)
 task_queue = Queue("task_queue", connection=redis_conn)
 
 secret_key = os.environ.get('SECRET_KEY')
