@@ -88,6 +88,7 @@ $RECYCLE.BIN/
 
 # Pycharm directory
 .idea/
+ana/
 
 # Files generated during development
 uploads/

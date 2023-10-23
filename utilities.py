@@ -5,7 +5,6 @@ from flask import jsonify
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 
-
 # Authenticate using the credentials file
 credentials_file = "json/job-scraping-key.json"
 credentials = service_account.Credentials.from_service_account_file(credentials_file,
@@ -18,9 +17,7 @@ global docs_service
 docs_service = build('docs', 'v1', credentials=credentials)
 
 
-
-def generate_instruction(row_data, headline, keyword, first_run,gpt_version):
-
+def generate_instruction(row_data, headline, keyword, first_run, gpt_version):
     # Use the data from 'row_data' to construct your instruction template
     style = row_data['Instructions']  # Column 'C'
     title = row_data['Blog Title']  # Column 'A'
@@ -76,7 +73,7 @@ def formulate_instructions(row_data, run_number):
             if len(headline) > 2:
                 keyword = row_data.get("Keywords_" + key.split('_')[1])
                 gpt_version = row_data.get("GPT_v_" + key.split('_')[1])
-                instruction.append(generate_instruction(row_data, headline, keyword,first_run ,gpt_version ))
+                instruction.append(generate_instruction(row_data, headline, keyword, first_run, gpt_version))
     return instruction
 
 
@@ -106,17 +103,14 @@ def generate_content(openai_api_key, instructions, max_tokens=550):
         return e
 
 
-
-
-def create_google_doc(document_title,folder_id):
+def create_google_doc(document_title, folder_id):
     file_metadata = {
         'name': document_title,
         'parents': [folder_id],
         'mimeType': 'application/vnd.google-apps.document'
     }
     new_document = drive_service.files().create(body=file_metadata).execute()
-    return new_document["id"],new_document["name"]
-
+    return new_document["id"], new_document["name"]
 
 
 def update_google_doc(doc_id, content):

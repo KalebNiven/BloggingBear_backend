@@ -7,15 +7,21 @@ import os
 import pandas as pd
 from config import OPENAI_API_KEY
 from cryptography.fernet import Fernet
+from rq import Worker, Queue, get_current_job
+from flask_sqlalchemy import SQLAlchemy
+from redis import Redis
+from rq.job import Job
+import json
 
 logging.basicConfig(level=logging.DEBUG)
 
 app = Flask(__name__)
 # CORS(app)
-#CORS(app, resources={r"/*": {"origins": "https://bloggingbear-frontend-39f0be1ffd81.herokuapp.com/"}})
-cors = CORS(app, resources={r"/*": {"origins": "*"}})
-# Attempt to load the secret key from an environment variable
-# If it doesn't exist, create a new one and save it in the environment variable
+# CORS(app, resources={r"/*": {"origins": "https://bloggingbear-frontend-39f0be1ffd81.herokuapp.com/"}})
+CORS(app)
+redis_conn = Redis()
+task_queue = Queue("task_queue", connection=redis_conn)
+
 secret_key = os.environ.get('SECRET_KEY')
 if not secret_key:
     secret_key = Fernet.generate_key().decode()
@@ -47,6 +53,13 @@ def get_token():
     #     return jsonify({'token': decrypted_token.decode()}), 200
     # except Exception as e:
     #     return jsonify({'error': str(e)}), 400
+
+
+def calculate_percentage(completed, total):
+    if total == 0:
+        return 0  # To avoid division by zero
+    percentage = (completed / total) * 100
+    return percentage
 
 
 @app.route('/upload-file', methods=['POST'])
@@ -100,41 +113,39 @@ def get_doc_urls():
         return jsonify({'error': str(e)}), 500
 
 
-@app.route('/generate-content', methods=['POST'])
-def generate_content_endpoint():
+def generate_content_queue(data):
+    job = get_current_job()
     logging.info("Received request at /generate-content endpoint")
     # try:
     # Get the payload from the request
-    data = request.get_json()
     selected_rows = data.get('data')
     max_tokens = data.get('max_tokens', 150)  # Default to 150 if not provided
     folder_id = data.get('folder_id')
     if not selected_rows:
-        return jsonify({'error': "Data not provided"}), 500
+        return json.dumps({'error': "Data not provided"}), 500
     if not folder_id:
-        return jsonify({'error': "Folder Path not provided"}), 500
+        return json.dumps({'error': "Folder Path not provided"}), 500
 
     logging.debug("Received data: %s", data)
 
-    # The following is a loop that goes through each selected row,
-    # formulates instructions, and then generates content using your existing function.
-    # Note that the `formulate_instructions` function is called with a made-up `run_number` argument.
-    # You might need to adjust this part to correctly derive the run_number from your data or API request.
     response_data = []
     for index, row in enumerate(selected_rows):
         row_data = []
         if 'Instructions' not in row:
-            return jsonify({'error': "Instructions not provided of row " + str(row.get('row_no'))}), 500
+            return json.dumps({'error': "Instructions not provided of row " + str(row.get('row_no'))}), 500
         if 'Blog Title' not in row:
-            return jsonify({'error': "Blog Title not provided of row " + str(row.get('row_no'))}), 500
+            return json.dumps({'error': "Blog Title not provided of row " + str(row.get('row_no'))}), 500
         instructions = formulate_instructions(row, run_number=1)
-        for instruction in instructions:
+        for no, instruction in enumerate(instructions):
             content = generate_content(OPENAI_API_KEY, instruction, max_tokens)
-            print('content genrated')
             if hasattr(content, 'json_body'):
-                return jsonify({'error': str(content.json_body.get('error').get('message')) + " on row " + str(
+                return json.dumps({'error': str(content.json_body.get('error').get('message')) + " on row " + str(
                     row.get('row_no'))}), 500
             else:
+                percentage_done = calculate_percentage(no + 1, len(instructions))
+                job.meta['status'] = 'in_progress'
+                job.meta["percentage_done"] = percentage_done
+                job.save()
                 row_data.append(content.get('choices')[0].get('message').get('content'))
         rows = {
             "title": row['Blog Title'],
@@ -147,13 +158,31 @@ def generate_content_endpoint():
 
     # Return the generated content
     return create_doc(response_data)
-    # return jsonify({'data': response_data}), 200
 
 
-# except Exception as e:
-#     # Handle any errors that occur
-#     logging.error("An error occurred: %s", str(e))
-#     return jsonify({'error': str(e)}), 500
+@app.route('/generate-content', methods=['POST'])
+def generate_content_endpoint():
+    data = request.get_json()
+    from App import generate_content_queue
+    job = task_queue.enqueue_call(
+        func=generate_content_queue, args=(data,), result_ttl=5000
+    )
+    return jsonify({'task_id': job.get_id()}), 200
+
+
+@app.route("/results/<job_key>", methods=['GET'])
+def get_results(job_key):
+    job = Job.fetch(job_key, connection=redis_conn)
+    job.refresh()
+    if job.is_finished:
+        return str(job.result), 200
+    else:
+        if job.meta:
+            if job.meta.get("status") == "in_progress":
+                return json.dumps({"status": "In Progress",
+                                   "percentage_done": str(job.meta.get("percentage_done"))})
+        else:
+            return json.dumps({"status": "In Progress"})
 
 
 def create_doc(data):
@@ -166,7 +195,7 @@ def create_doc(data):
             content = row.get('content')
             # Create a new Google Doc using the function you defined earlier
             doc_id, name = create_google_doc(title, folder_id)
-            doc_name.append("," + name)
+            doc_name.append(name)
             # Log the successful creation
             logging.info("Document created successfully")
 
@@ -175,15 +204,14 @@ def create_doc(data):
 
         # log the successful update
         logging.info("Document updated successfully")
-    except KeyError as e:
-        return jsonify({'error': "Data not provided"}), 500
     except Exception as e:
-        return jsonify(error=str(e), message="An error occurred"), 500
+        return json.dumps({'error': "Data not provided"}), 500
 
     # Return the doc ID and URL
-    return jsonify({'docId': "Document created successfully " + ''.join(doc_name)})
+    return json.dumps({'docId': "Document created successfully " + ''.join(doc_name),
+                       'docurl': "https://docs.google.com/document/d/" + str(doc_id) + "/edit"})
 
 
 if __name__ == '__main__':
     # setup_google_docs_api()
-    app.run(debug=False,host="0.0.0.0")
+    app.run(debug=False, host="0.0.0.0")
