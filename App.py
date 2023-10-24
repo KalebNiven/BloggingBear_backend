@@ -139,6 +139,10 @@ def generate_content_queue(data):
             return json.dumps({'error': "Instructions not provided of row " + str(row.get('row_no'))}), 400
         if 'Blog Title' not in row:
             return json.dumps({'error': "Blog Title not provided of row " + str(row.get('row_no'))}), 400
+        if len(row.get('Instructions')) < 1:
+            return json.dumps({'error': "Instructions not provided of row " + str(row.get('row_no'))}), 400
+        if len(row.get('Blog Title')) < 1:
+            return json.dumps({'error': "Blog Title not provided of row " + str(row.get('row_no'))}), 400
         instructions = formulate_instructions(row, run_number=1)
         for no, instruction in enumerate(instructions):
             content = generate_content(OPENAI_API_KEY, instruction, max_tokens)
@@ -186,11 +190,11 @@ def get_results(job_key):
     job.refresh()
     if job.is_finished:
         if isinstance(job.result, str):
-            return jsonify(job.result), 200
+            return jsonify(json.loads(job.result)), 200
         else:
             error_message, status_code = job.result
             # Convert the response dictionary to a JSON string
-            return jsonify(error_message), status_code
+            return jsonify(json.loads(error_message)), status_code
     else:
         if job.meta:
             if job.meta.get("status") == "in_progress":
