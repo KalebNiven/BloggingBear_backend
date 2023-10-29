@@ -13,7 +13,10 @@ from redis import Redis
 from rq.job import Job
 import json
 
+
 logging.basicConfig(level=logging.DEBUG)
+
+# testing commit
 
 app = Flask(__name__)
 # CORS(app)
