@@ -201,7 +201,8 @@ def generate_content_endpoint():
 def get_results(job_key):
     job = Job.fetch(job_key, connection=redis_conn)
     job.refresh()
-    print(job.meta)
+    print(redis_conn)
+    print(job)
     if job.is_finished:
         if isinstance(job.result, str):
             return jsonify(json.loads(job.result)), 200
