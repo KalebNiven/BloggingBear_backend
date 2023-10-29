@@ -194,8 +194,7 @@ def generate_content_endpoint():
     job = task_queue.enqueue_call(
         func=generate_content_queue, args=(data,), result_ttl=4000, timeout=1000
     )
-    print(job)
-    return jsonify({'task_id': job.get_id(),job:job}), 200
+    return jsonify({'task_id': job.get_id()}), 200
 
 
 @app.route("/results/<job_key>", methods=['GET'])
