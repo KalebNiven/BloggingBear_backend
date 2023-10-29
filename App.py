@@ -16,6 +16,8 @@ import json
 
 logging.basicConfig(level=logging.DEBUG)
 
+#test commit
+
 app = Flask(__name__)
 # CORS(app)
 # CORS(app, resources={r"/*": {"origins": "https://bloggingbear-frontend-39f0be1ffd81.herokuapp.com/"}})
