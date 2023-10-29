@@ -214,7 +214,7 @@ def get_results(job_key):
                 return jsonify({"status": "In Progress",
                                 "percentage_done": str(job.meta.get("percentage_done"))}), 200
         else:
-            return jsonify({"status": "In Progress", "percentage_done": str(0)}
+            return jsonify({"status": "In Progress", "percentage_done": str(0), "job":job}
                            ), 200
 
 
