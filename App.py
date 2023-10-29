@@ -48,7 +48,7 @@ doc_urls = []
 @app.route('/get_token', methods=['GET'])
 def get_token():
     return "ug"
-    # try:
+    # try: 
     #     # Get the encrypted token from your .env file
     #     with open(".env", "r") as env_file:
     #         for line in env_file:
@@ -194,15 +194,14 @@ def generate_content_endpoint():
     job = task_queue.enqueue_call(
         func=generate_content_queue, args=(data,), result_ttl=4000, timeout=1000
     )
-    return jsonify({'task_id': job.get_id()}), 200
+    print(job)
+    return jsonify({'task_id': job.get_id(),job:job}), 200
 
 
 @app.route("/results/<job_key>", methods=['GET'])
 def get_results(job_key):
     job = Job.fetch(job_key, connection=redis_conn)
     job.refresh()
-    print(redis_conn)
-    print(job)
     if job.is_finished:
         if isinstance(job.result, str):
             return jsonify(json.loads(job.result)), 200
@@ -216,7 +215,7 @@ def get_results(job_key):
                 return jsonify({"status": "In Progress",
                                 "percentage_done": str(job.meta.get("percentage_done"))}), 200
         else:
-            return jsonify({"status": "In Progress", "percentage_done": str(0), "job":str(job)}
+            return jsonify({"status": "In Progress", "percentage_done": str(0)}
                            ), 200
 
 
