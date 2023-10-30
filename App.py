@@ -43,7 +43,7 @@ cipher_suite = Fernet(secret_key.encode())
 doc_urls = []
 
 
-@app.route('/')
+@app.route('/test-redis')
 def check_redis_connection():
     try:
         # Attempt to perform a simple operation to check the connection
