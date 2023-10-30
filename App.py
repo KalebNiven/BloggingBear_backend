@@ -43,6 +43,15 @@ cipher_suite = Fernet(secret_key.encode())
 doc_urls = []
 
 
+@app.route('/')
+def check_redis_connection():
+    try:
+        # Attempt to perform a simple operation to check the connection
+        redis_conn.ping()
+        return "Redis is connected!"
+    except redis.exceptions.ConnectionError as e:
+        return "Failed to connect to Redis: " + str(e)
+
 # Create another route to get the decrypted token
 @app.route('/get_token', methods=['GET'])
 def get_token():
