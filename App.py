@@ -13,7 +13,6 @@ from redis import Redis
 from rq.job import Job
 import json
 
-
 logging.basicConfig(level=logging.DEBUG)
 
 #test commit
@@ -24,7 +23,7 @@ app = Flask(__name__)
 CORS(app)
 # Access the Redis URL provided by Heroku's environment variable
 redis_url = os.environ.get("REDISCLOUD_URL")
-redis_conn = Redis.from_url(redis_url)
+redis_conn = Redis.from_url('redis://default:Fmd8z5mqQLEIMwyv576ztSUf2SONxzZV@redis-12802.c57.us-east-1-4.ec2.cloud.redislabs.com:12802')
 # for local use
 # redis_conn = Redis()
 task_queue = Queue("task_queue", connection=redis_conn)
