@@ -26,15 +26,6 @@ def generate_instruction(row_data, headline, keyword, first_run, gpt_version):
         additional_data = row_data['Facts']  # Column 'N'
 
     # Constructing the core instruction
-    def generate_instruction(row_data, headline, keyword, first_run, gpt_version):
-    # Use the data from 'row_data' to construct your instruction template
-    style = row_data['Instructions']  # Column 'C'
-    title = row_data['Blog Title']  # Column 'A'
-    additional_data = ""
-    if row_data['Facts'] is not None:
-        additional_data = row_data['Facts']  # Column 'N'
-
-    # Constructing the core instruction
     instruction = (
         f"You are an amazing writer, probably one of the best in the US."
         f"You are super versatile and can write basically on any subject and pick up any style.\n\n"
@@ -49,20 +40,6 @@ def generate_instruction(row_data, headline, keyword, first_run, gpt_version):
         f" Here are the headlines to write about: '{headline}'\n\n"
         f"Please use the following keywords (no need to make it bold): '{keyword}'"
     )
-
-    # Adding the additional data instruction for the first run
-    if first_run and additional_data:
-        instruction += (
-            f"Please ensure to integrate the facts and figures I've provided as hyperlinks directly in the text. The "
-            f"anchor text should always be a number (priority)  or a fact (choose 1-3 words maximum), leading the "
-            f"readers to the source without breaking the flow of the narrative. No footnotes, please. Use the "
-            f"following facts/links: “{additional_data}'"
-        )
-    instruction_data = {
-        'instruction': instruction,
-        'GPT_Version': gpt_version,
-    }
-    return instruction_data
 
     # Adding the additional data instruction for the first run
     if first_run and additional_data:
