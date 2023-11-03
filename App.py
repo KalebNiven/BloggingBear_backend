@@ -146,12 +146,12 @@ def generate_content_queue(data):
     response_data = []
     for index, row in enumerate(selected_rows):
         row_data = []
-        if 'Instructions' not in row:
-            return json.dumps({'error': "Instructions not provided of row " + str(row.get('row_no'))}), 400
+        if 'Style' not in row:
+            return json.dumps({'error': "Style not provided of row " + str(row.get('row_no'))}), 400
         if 'Blog Title' not in row:
             return json.dumps({'error': "Blog Title not provided of row " + str(row.get('row_no'))}), 400
-        if len(row.get('Instructions')) < 1:
-            return json.dumps({'error': "Instructions not provided of row " + str(row.get('row_no'))}), 400
+        if len(row.get('Style')) < 1:
+            return json.dumps({'error': "Style not provided of row " + str(row.get('row_no'))}), 400
         if len(row.get('Blog Title')) < 1:
             return json.dumps({'error': "Blog Title not provided of row " + str(row.get('row_no'))}), 400
         instructions = formulate_instructions(row, run_number=1)
