@@ -13,10 +13,9 @@ from redis import Redis
 from rq.job import Job
 import json
 
-
 logging.basicConfig(level=logging.DEBUG)
 
-# testing commit
+#test commit
 
 app = Flask(__name__)
 # CORS(app)
@@ -44,11 +43,20 @@ cipher_suite = Fernet(secret_key.encode())
 doc_urls = []
 
 
+@app.route('/test-redis')
+def check_redis_connection():
+    try:
+        # Attempt to perform a simple operation to check the connection
+        redis_conn.ping()
+        return "Redis is connected!"
+    except redis.exceptions.ConnectionError as e:
+        return "Failed to connect to Redis: " + str(e)
+
 # Create another route to get the decrypted token
 @app.route('/get_token', methods=['GET'])
 def get_token():
     return "ug"
-    # try:
+    # try: 
     #     # Get the encrypted token from your .env file
     #     with open(".env", "r") as env_file:
     #         for line in env_file:

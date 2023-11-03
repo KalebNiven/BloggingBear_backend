@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "ana-openai",
+  "private_key_id": "56cced6b9ddcb4ce913f49a0779e81cdb14effe2",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCwuBCqYsfEtQ4F\nzhUIbpclTX/sSkJBcjUAbhbZW76jo3Olr3ns6vp5ys/5RkltLSIWIRYqHCu6yiFD\nexvRtjcRHbleYqbQ7tSelngSVmV8oVXtB4AZQkEP5UhRFQeTc0gnhmoyiQinSJmY\n/mkw+vPfWW4dPtPjmUtKHSRqCCzff0JvMFjo0aiGIgLeGIX23k36rqVDUHaoDtXS\n7K6a15He4frRlV2Q7p67a4eC52PZANm3058yAuabZOZSKL50R3gTc0smkIBvjNhj\n8cCEOb493NlgPnOexMMHv9lYOjM/vxTywzi/xa0WNR2ZgXLYZTSRx7ZGemvx0MCq\nhkEBL7ilAgMBAAECggEAI5/fgDGsmtty6bmrJMmCf7sZVC1+IMpgo+cNhSDJFBzh\ntd9jgV63QrEfbt179N3Z1sMxwChwqlWQEhXxvDty62jmEwBpJ4pV42hq6StwhwjR\nFRjjenQQQJ+Ujf/iyJc/TvR6WRil3W81w5FZ7E1St05Ec/HT7jhbZKPuUM+4GA+u\nDvYNFvKYOL5ZusVVjxQNsTYFqHI/yPm7DL4+Kpj8DrBI3+QMVfKSYaw1duszASck\ncTjeBJhj7Ws7m3BHIDrd8zVaaHR9RXftqqk62QGA48sqt2E1cp0J2Kmfri9xZRy8\n5n+yJmJtq1kbtMet+IkDKWi3K2Z/XsiBSQUOFp6vewKBgQDiE5whqOSGLN+sjOOP\n8P6kkYMs1o0m20uEYX4IxQKg6ZGwC04hNGo+11wuXtopptVRxcOaRK6RfxyAvJeP\nL4EgdSjIztdLWZcXuMUBECmrNSK3TWdtLU5KBvJ/6kEcSoQWHagn6NZEytDIjPAE\nfTwoOJwHact4xbb37uF6Jo0MswKBgQDIHAUk8rcARvm44FMYfJq7eYyIWnkI8/Zi\nyTvS0nyAWFpUA5Q+2fdIqaffPzmNyCLMwZDD9N5urCn+Y25kUqiYUR21Bu7Mx6dF\n3WR3Z6eYZBRBbzi1UJ5yxP7U6eCRA1CjrZ0I1da/wdan41/q9z4s02dLiHK2CD7y\nrw+0/CmBRwKBgQDZbpDQUraPUWNCejJ3Awp1zrmBi0wwXeNQi8+CsbAogNusnALl\nrpqsm8Y9lt5uBtXNks3gdkQLDVyleDyv6rlfNS8nir/H6X+Gwh8/OYNJ9Y3RC/H4\nMAXG7s2WNv+uLQDCoH1U/PvvJ70L1XkWaDhOWru96YNXQZkK9cYIDEHGPwKBgGQw\ny06Vi5TC9JNhFZnEAYDuObOngMQ/ydPqJ17F7nogQpGf/SB+53XlI9z9/eYEF5Bn\nNgE24AuPfbMVu5bVX/5rVrFlmDjFmfW8BGpYZqxBJ3cfpcf6ZmrWQTT/KGXSwBRD\nf8WFs3DtL3l9uW+efO3apvRFjBGiDUpa5kVan7lPAoGBAIIODse+g3/pM9f2nUmM\ncj3nyGIlQW3/oRPDfirmS6ZnJqROpF+M5ti1jg2fCZhJKjJwR7gjnCGWWhMRKfxz\n+WyQTzFFjs6AdgEF7+FNCslZFGQkJbfLY1oAntywDl+xMgBwIQ1AJXaE0/MxA7bG\n6lNn7yQPQGOmzYpPrqrFnnu9\n-----END PRIVATE KEY-----\n",
+  "client_email": "bloggin-bear@ana-openai.iam.gserviceaccount.com",
+  "client_id": "112302592114665453108",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/bloggin-bear%40ana-openai.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

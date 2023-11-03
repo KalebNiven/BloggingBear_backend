@@ -6,7 +6,6 @@ __pycache__/
 
 # Virtual environment directory
 venv/
-.env
 
 # IDE and editor directories/files
 .idea/
@@ -89,13 +88,15 @@ $RECYCLE.BIN/
 
 # Pycharm directory
 .idea/
+ana/
 
 # Files generated during development
 uploads/
 
-#environment
-.env
 
 #secret keys I should not upload
 json/
 code/json
+
+#env 
+.env
