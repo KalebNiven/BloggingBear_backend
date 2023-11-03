@@ -26,23 +26,43 @@ def generate_instruction(row_data, headline, keyword, first_run, gpt_version):
         additional_data = row_data['Facts']  # Column 'N'
 
     # Constructing the core instruction
+    def generate_instruction(row_data, headline, keyword, first_run, gpt_version):
+    # Use the data from 'row_data' to construct your instruction template
+    style = row_data['Instructions']  # Column 'C'
+    title = row_data['Blog Title']  # Column 'A'
+    additional_data = ""
+    if row_data['Facts'] is not None:
+        additional_data = row_data['Facts']  # Column 'N'
+
+    # Constructing the core instruction
     instruction = (
         f"You are an amazing writer, probably one of the best in the US."
         f"You are super versatile and can write basically on any subject and pick up any style.\n\n"
         f"Today, you are writing in the following style: '{style}'\n\n"
         f"So, keeping in mind this style, I want you to write a few sections for a blog titled: '{title}'\n\n"
         f"You’ll have to write a few sections for that post now.  Keep titles the same even though they are boring, "
-        f"make them title case, and also format them for publishing (if it’s marked as H2, it has to be formatted as "
-        f"H2, etc. but you have to remove H2&H3 mark and transform it into an subheading of the right formatting but "
-        f"don’t make it bold)"
-        f" Please also ensure there’s no mumbling - go straight to the point. For instance, if H2/H3 is a question, "
+        f"if the title is just one word, keep it as one word, don't add anything else. Make titles title case,"
+        f"don't add any other formatting, asterisk or hashtag signs, any of that. "
+        f" Please also ensure there’s no mumbling - go straight to the point. For instance, if the title is a question, "
         f"the writing should clearly respond to this question (sort of like a perfect SEO snippet will do).  Also, "
-        f"please don’t write any intros and outros unless it is specifically asked in the headlines. I am willing to "
-        f"copy and paste the output so I’d appreciate if you want any other additional comments, etc. Just stick to "
-        f"the guidelines."
+        f"please don’t write any intros and outros unless it is specifically listed as one of the headline. "
         f" Here are the headlines to write about: '{headline}'\n\n"
         f"Please use the following keywords (no need to make it bold): '{keyword}'"
     )
+
+    # Adding the additional data instruction for the first run
+    if first_run and additional_data:
+        instruction += (
+            f"Please ensure to integrate the facts and figures I've provided as hyperlinks directly in the text. The "
+            f"anchor text should always be a number (priority)  or a fact (choose 1-3 words maximum), leading the "
+            f"readers to the source without breaking the flow of the narrative. No footnotes, please. Use the "
+            f"following facts/links: “{additional_data}'"
+        )
+    instruction_data = {
+        'instruction': instruction,
+        'GPT_Version': gpt_version,
+    }
+    return instruction_data
 
     # Adding the additional data instruction for the first run
     if first_run and additional_data:
