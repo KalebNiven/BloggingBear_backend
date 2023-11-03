@@ -19,7 +19,7 @@ docs_service = build('docs', 'v1', credentials=credentials)
 
 def generate_instruction(row_data, headline, keyword, first_run, gpt_version):
     # Use the data from 'row_data' to construct your instruction template
-    style = row_data['Instructions']  # Column 'C'
+    style = row_data['Style']  # Column 'C'
     title = row_data['Blog Title']  # Column 'A'
     additional_data = ""
     if row_data['Facts'] is not None:

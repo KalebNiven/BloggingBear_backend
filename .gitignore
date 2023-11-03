@@ -98,3 +98,4 @@ uploads/
 
 #secret keys I should not upload
 json/
+code/json
